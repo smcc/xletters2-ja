@@ -28,10 +28,10 @@
  * resources, as that would be cheating. */
 
 /* The width of the play area, in pixels */
-#define WIDTH 512
+#define WIDTH 1024
 
 /* The height of the play area, in pixels */
-#define HEIGHT 512
+#define HEIGHT 1024
 
 
 
@@ -64,10 +64,11 @@
 /* The following constants are configuration variables */
 
 /* The file from which non-bonus words are read */
-#define WORDFILE "/usr/local/share/xletters/jp-en.txt"
+#define WORDFILE "/tmp/xletters-words.utf8"
 
 /* The file from which input-conversions are read */
-#define ICONVFILE "/usr/local/share/xletters/inputconv.txt"
+#define ICONVFILE "/tmp/inputconv.txt"
+/*#define ICONVFILE "/usr/local/share/xletters/inputconv.txt"*/
 
 /* The high score file */
 /* if you change this, you should probably also modify Makefile.am */
@@ -100,7 +101,7 @@
  *  0 don't show comment/translation
  *  1 show comment/translation, in the lower part of the screen
  *  2 show comment/translation, always */
-#define SHOWCOMMENT 1
+#define SHOWCOMMENT 2
 
 /* The font to use, if not overriden by a resource specification */
 #define FONTNAME "-*-*-*-*-*-ja-18-*-*-*-*-*-iso10646-*"

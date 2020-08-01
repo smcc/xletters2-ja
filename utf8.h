@@ -33,7 +33,8 @@ typedef ucs4_t wchar;
 #define UCS4_NULL (ucs4_t)0
 #define UCS4_LF (ucs4_t)0xa
 #define UCS4_SPC (ucs4_t)0x20
-#define UCS4_POINT (ucs4_t)0x2e
+/* #define UCS4_POINT (ucs4_t)0x2e */
+#define UCS4_POINT (ucs4_t)0x2d /* make hyphen */
 #define UCS4_SLASH (ucs4_t)0x2f 
 #define UCS4_LT (ucs4_t)0x3c
 #define UCS4_GT (ucs4_t)0x3e 

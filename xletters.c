@@ -804,7 +804,7 @@ int textWidth(XChar2b *s, int len) /* calculate the width */
   XTextExtents16(fnt_info,s,len,&dir_ret,&f_a_ret,&f_d_ret,&overall);
   //debugmsg(2,"width=%d, lbearing=%d, rbearing=%d\n",
   //         overall.width, overall.lbearing, overall.rbearing);
-  return overall.width;
+  return 2*overall.width;
 }
 
 /* move kana structure to beginning of chain */
@@ -911,7 +911,7 @@ char update_word(word_state_t *pw) {
         fprintf(stderr,"  direct match !\n");
       pk->kanatyped += pk->pendtyped;
       pk->pendtyped = 0;
-      pk->katwidth = 2*textWidth(pk->kanaX,pk->kanatyped);
+      pk->katwidth = textWidth(pk->kanaX,pk->kanatyped);
       if (pk->kanatyped >= pk->kanalen) word_is_complete=1;
     } else {/* use the inputconverter */
       for (i=0;inputconverter[i].kana != NULL;i++) {
@@ -937,7 +937,7 @@ char update_word(word_state_t *pw) {
               }
               pk->kanatyped += inputconverter[i].klen;
               pk->pendtyped = 0;
-              pk->katwidth = 2*textWidth(pk->kanaX,pk->kanatyped);
+              pk->katwidth = textWidth(pk->kanaX,pk->kanatyped);
               if (pk->kanatyped == pk->kanalen) word_is_complete=1;
             }
             else if ((DEBUG > 1) && (pw==words)) {/*debug*/
@@ -1009,7 +1009,7 @@ void enter_word() /* Get new word falling. */
     while (pkana_item != NULL) {
       XTextExtents16(fnt_info,pkana_item->kanaX,pkana_item->kanalen,
 		     &dir_ret,&f_a_ret,&f_d_ret,&overall);
-      pkana_item->kawidth = 2*overall.width;
+      pkana_item->kawidth = overall.width;
       pkana_item->katwidth = 0;
       if (ka_asc < fnt_info->ascent) ka_asc=fnt_info->ascent;
       if (ka_desc < fnt_info->descent) ka_desc=fnt_info->descent;
@@ -1024,12 +1024,14 @@ void enter_word() /* Get new word falling. */
     }
   }
   words[nb_words].kaxoffs = 0;
+  kj_asc = 30;
+  //printf("%d %d\n", kj_asc, ka_desc);
   words[nb_words].kayoffs = - (kj_asc + 2 + ka_desc);
   words[nb_words].coxoffs = 0;
   words[nb_words].coyoffs = kj_desc + 2 + co_asc;
   /* xxx following should take comment and furigana into account... */
   if (words[nb_words].kjwidth<WIDTH)
-    words[nb_words].x = random()%(WIDTH-words[nb_words].kjwidth);
+    words[nb_words].x = random()%(WIDTH-2*words[nb_words].kjwidth);
   else words[nb_words].x = 0;
   if (trainingmode) {
     words[nb_words].y = (ka_asc - words[nb_words].kayoffs
@@ -1305,7 +1307,7 @@ void new_word(int dentry_num)
   pw=words+nb_words;
   pw->kanastruct=NULL;
   pw->purekana = 0;
-  if ((!trainingmode)&&bonuslevel) {
+  if ((!trainingmode)&&bonuslevel&&0) {
     len = random()%5+5;
     kanji = malloc(len*sizeof(ucs4_t));
     kanjiX = malloc(len*sizeof(XChar2b));
@@ -1514,6 +1516,7 @@ key_proc(Widget w,XtPointer client_data,XEvent *evt,Boolean *cnt)
   KeySym keysym;
   Boolean mode;
   buflen=XLookupString(&evt->xkey,buf,KBD_1BUF_SIZE,&keysym,NULL);
+  /*printf("keysym: %04x\n", keysym);*/
   for (p=0;p<buflen;p++) {
     if ((buf[p]<=32)||(buf[p]>=127))
       continue;
