@@ -1,0 +1,47 @@
+%define ver @VERSION@
+%define rel 1
+%define prefix /usr/local
+
+Summary: Educational Game
+Name: xletters
+Version: %ver
+Release: %rel
+Copyright: GPL
+Group: X11/Games
+Source: http://www.pmmh.espci.fr/~daerr/xletters-%{version}.tar.gz
+URL: http://www.pmmh.espci.fr/~daerr/progs.html
+Buildroot: /var/tmp/%{name}-root
+
+%description
+Typing toy, help kids learn typing and spelling, they
+must type the words that fall on the screen before
+they reach the ground.
+
+%prep
+%setup -q
+
+%build
+%configure
+./configure --prefix=%prefix
+make
+
+%install
+rm -rf $RPM_BUILD_ROOT
+
+make DESTDIR=$RPM_BUILD_ROOT install
+
+%clean
+rm -rf $RPM_BUILD_ROOT
+
+%files
+%defattr(-,root,root)
+%config(noreplace) /var/local/games/lib/xletters/scores_jp-en
+%prefix/bin/*
+%prefix/man/*/*
+
+%changelog
+* Tue Jan 6 2004 Adrian Daerr <adrian.daerr@gmx.de>
+- copied and modified Felipe's spec file
+
+* Thu May 10 2001 Felipe Bergo <bergo@seul.org>
+- created spec file based on gPS spec file.

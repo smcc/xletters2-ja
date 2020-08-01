@@ -1,0 +1,415 @@
+.TH XLETTERS 6 "05 NOV 1998"
+.SH NAME
+xletters \- catch falling words
+.SH SYNOPSIS
+.B xletters
+[
+.I options
+]
+.SH DESCRIPTION
+.PP
+.I X Letters
+is a game under X to improve your typing skill.  It is inspired by
+the game
+.IR letters (6)
+by Larry Moss and Brent Nordquist (which itself is inspired
+by the game
+.IR "Letter Invaders" ,
+and ultimately by the famous
+.IR "Space Invaders" ).
+.PP
+The goal of the game is to destroy the words that fall down from
+the top before they reach the bottom.  To destroy a word, you
+must simply type it.
+.PP
+The game is organized in levels of increasing difficulty.  Each
+level is divided into two parts: a normal part and a bonus part.
+During the normal part, ordinary english words will fall down
+(found in the system's dictionary, usually
+.BR /usr/dict/words ).
+During the bonus part, the words are randomly generated from
+printable ascii characters.
+.PP
+If a word hits the ground during the normal part, you lose a life
+(you have five lives initially), and the word disappears
+(but the others keep on falling).  If a word hits the ground during
+the bonus part, the bonus part simply ends, with no additional
+penalty, and the game proceeds to the next level.
+.PP
+The normal part of a level ends when a certain time has elapsed.  The
+bonus part ends when either a certain time has elapsed or when a word
+has hit the ground.  The normal duration of a half-level is 600 time
+units, or 45 seconds (whatever the level).
+.PP
+Typing a word correctly makes the word disappear and scores you one
+point per letter, plus five more points, plus another extra three
+points if the word was destroyed in the top fifth of the window.
+This is the only way of gaining points: partially typed words are not
+worth anything, and even moving to another level doesn't bring you
+points (this is because even if you don't type
+.I anything
+you will go beyond the first level).
+.PP
+Short words fall faster than long ones.  Unless otherwise specified
+at compile time, words are not allowed to collide into one another.
+Therefore, when a new word appears, the game makes sure that all
+the words below it fall at least as fast as it.  The fall rate of the
+words also increases with the level (it is, however, the same between
+the normal part and the bonus part of the same level).  The rate at
+which words appear is constant on a given level, but it increases with
+the level.
+.PP
+A word is considered typed when the last printable characters that you
+typed since the word appeared are precisely the letters of the word.
+This means in particular that it is possible to ``kill two birds with
+one stone'' if one word ends with the letters with which another one
+begins - in fact, if two identical words appear (an unlikely but not
+impossible situation), you need only type one of them.  To say things
+differently, if you type a correct letter it will make your position
+in the word advance by one letter, and if you type an incorrect
+letter, it will make your position move back to the last place in the
+word that matches the characters you typed.  The current position in
+each word is indicated by putting the already typed letters in a
+different color (normally red).  Note that a different behaviour is
+selectable at compile time with which a wrong letter will cause all
+letters to be considered wrong (to make the difference obvious,
+consider the word ``abracadabrx'': if after having typed
+``abracadabr'' you press an ``a'', the normal behaviour will take you
+back to ``abra'' whereas the alternate behaviour will take you back to
+the beginning).
+.PP
+The game keeps a high score table.  When the game is over, one way or
+another, xletters will show, for the user and for the twenty best
+players, the name, the level reached, the final score, and the time
+during which the game was running.  Normally, each player is allowed
+only one entry in the high score table.  This can be modified at
+compilation time, however.
+.SH CONTROLS
+.PP
+The top of the window shows three buttons.  The
+.B Quit
+button will take you out of the game, the
+.B Pause
+button will pause the game or resume it if it was already paused,
+and the
+.B Next
+button will move to the next level (normal part).
+These buttons can also be accessed through accelerators: the
+``Escape'' key will quit the game, the ``Tab'' key (or ``Pause''
+if you have one) will suspend it or resume it, and the ``Page Down'' key
+(or ``Next'' if it is so labeled) will advance one level.
+.PP
+Three labels on the right of the buttons are used to indicate
+your lives, score and current level.
+.PP
+Other than that, to play the game you must simply type the words.
+In order for the typing to be effective, your mouse cursor must
+be in the game space (the large square area below the buttons and
+labels).  If you start typing while the game is paused, it will
+automatically resume.
+.PP
+Scoring is made \fImuch\fP more complicated if you choose to use the
+.B Next
+button to warp through levels.  (The point is that it should be used
+to avoid having to go through all the easy levels if you already type
+very fast.  So it should not handicap you excessively by giving you
+no points which you would have gotten if you had worked your way through
+those levels.  On the other hand, it should not be an obvious way of
+gaining arbitrarily many points.)  Here is the way it works: when
+you use the
+.B Next
+button to warp to the next level, you gain 350 ``virtual'' points.
+Those points are indicated in parentheses after your real points
+in the score label.  They are not worth anything by themselves.  On
+the other hand, if you have virtual points, every time you gain some
+points, that many virtual points will also be converted to real points
+(until you no longer have virtual points).  Thus, virtual points are
+worth something only if you prove yourself good enough to make them so.
+.PP
+There are some restrictions to the use of the
+.B Next
+button.  First, it will only work in the bonus part of a level, or
+if no word has fallen lower than the top fifth of the screen.  This
+is so you can't use it to get yourself easily out of a tricky situation.
+Second, if you already scored some points on the current level, using the
+.B Next
+button will award you fewer than the normal 350 virtual points (see above),
+in fact precisely twice fewer than as many points as you gained on the
+level (but no less than zero, of course).
+.SH "TRAINING MODE"
+.B xletters
+has a training mode, which you can invoke using the
+.B \-train
+command line option.  In training mode, only one (english) word
+appears at a time, anywhere on the game space, and it does not
+fall.  A new word appears as soon as you finish typing the previous
+one.  In training mode, there are no lives, points, levels, or bonus
+words.
+.SH "DEATHMATCH AND DUEL"
+.B xletters
+also has the amazing ``deathmatch'' mode.  To invoke this mode, use the
+.B \-death
+command line option.  This has the following effects on the behaviour of
+.BR xletters :
+first, it will read words on the standard input, and make them fall.
+Second, you can choose between typing falling words, or typing a
+special word in a special part of the display, just above the game
+space.  To switch between both modes, use the
+.B Mode
+button or press the ``Backspace'' key.  The special word typed must
+be an english word: if the letter you type makes the word fragment
+no longer begin a word in the dictionary, it immediately disappears.
+When you type a full word, you can then send it by using the
+.B Send
+button or by pressing the ``Return'' key.  The word sent gets printed
+on the standard output.
+.PP
+These features make sense when \fItwo\fP copies of
+.B xletters
+are run in deathmatch mode, with the standard output of each being
+sent to the standard input of the other (possibly across the network).
+Then the player on each game can not only kill his falling words but also
+send words to the other player.
+.PP
+Even more extreme than the ``deathmatch'' mode is the ``duel'' mode,
+activated through the
+.B \-duel
+command switch.  In duel mode, the computer does not send words of
+its own, and only words sent through the standard input will appear.
+In this case, there is no
+.B Next
+button, and switching to the next level can only occur after a certain
+amount of time.  In fact, there are no bonus parts of levels, so levels
+change twice more rapidly than in normal play.  Moreover, a level change
+does not erase all the current words contrary to what happens in normal
+(or deathmatch) mode.
+.PP
+The \fIX Letters\fP distribution includes a shell script named
+.B xletters-duel
+which uses Avian Research's
+.B netcat
+program (nc) to open a socket, run
+.B xletters
+in duel mode, and try to connect to the same socket on a given
+computer.  Thus, two people on two different computers can play
+a duel by each running
+.B xletters-duel
+with the name of the other's computer as parameter.  (Both copies
+must be run within five seconds of the other.)
+.SH OPTIONS
+.PP
+.I X Letters
+recognizes all the standard X Toolkit command line options,
+among which the following:
+.TP
+.BI \-bg " color"
+Specifies the background color to use.
+.TP
+.BI \-fg " color"
+Specifies the foreground color to use for the labels and buttons.
+.TP
+.BI \-fn " font"
+Specifies the font to use for displaying the labels and buttons.
+.TP
+.BI \-name " name"
+Specifies the application name under which resources
+are to be obtained, rather than under the default
+executable file name.
+.I name
+should not contain ``.'' or ``*'' characters.
+.TP
+.BI \-title " string"
+Specifies the window title string.
+.TP
+.BI \-geometry " geometry"
+Specifies the preferred position of the window.
+Specifying a size is not recommended.
+.TP
+.BI \-display " display"
+Specifies the X server to use.
+.TP
+.BI \-xrm " resourcestring"
+Explicitely give a resource string.
+.PP
+The following additional options are recognized by
+.IR xletters :
+.TP
+.BI \-wfn " font"
+Specifies the font to use for the falling words.
+(Sets the
+.B wordFont
+resource.)
+.TP
+.BI \-wc " color"
+Specifies which color to use for the words.
+(Sets the
+.B wordColor
+resource.)
+.TP
+.BI \-tc " color"
+Specifies which color to use for the correctly typed part
+of the words.
+(Sets the
+.B typedColor
+resource.)
+.TP
+.BI \-gbg " color"
+Specifies which color to use for the background of the game
+space.
+(Sets the
+.B gameSpace.background
+resource.)
+.TP
+.BI \-notrain
+Do not go in training mode (this is the default).
+(Sets the
+.B trainingMode
+resource to ``False''.)
+.TP
+.BI \-train
+Run the game in training mode (see
+.B "TRAINING MODE"
+above).
+(Sets the
+.B trainingMode
+resource to ``True''.)
+.TP
+.BI \-nodeath
+Do not run in deathmatch or duel mode (this is the default).
+(Sets the
+.B deathMode
+resource to ``normal''.)
+.TP
+.BI \-death
+Run in deathmatch mode (see
+.B "DEATHMATCH AND DUEL"
+above).
+(Sets the
+.B deathMode
+resource to ``death''.)
+.TP
+.BI \-duel
+Run in duel mode (see
+.B "DEATHMATCH AND DUEL"
+above).
+(Sets the
+.B deathMode
+resource to ``duel''.)
+.PP
+In addition,
+.I xletters
+recognizes
+.BR \-help " and " \-version
+options.
+.SH WIDGETS
+.TP
+.B "groundBox (\fRclass\fP Box, \fRparent\fP \fR(toplevel)\fP)"
+This is the main application box that supports all the
+other widgets.
+.TP
+.B "label (\fRclass\fP Label, \fRparent\fP groundBox)"
+The
+.I xletters
+label.  The text of this label cannot be changed.
+.TP
+.B "quitButton (\fRclass\fP Command, \fRparent\fP groundBox)"
+The
+.B Quit
+button.
+.TP
+.B "pauseButton (\fRclass\fP Toggle, \fRparent\fP groundBox)"
+The
+.B Pause
+button.
+.TP
+.B "livesLabel (\fRclass\fP Label, \fRparent\fP groundBox)"
+The lives label.
+.TP
+.B "scoreLabel (\fRclass\fP Label, \fRparent\fP groundBox)"
+The score label.
+.TP
+.B "levelLabel (\fRclass\fP Label, \fRparent\fP groundBox)"
+The level label.
+.TP
+.B "gameSpace (\fRclass\fP Core, \fRparent\fP groundBox)"
+The game space in which the words fall.  Key presses and Expose events
+are handled through event handlers and not the ordinary translation/action
+mechanism.
+.SH RESOURCES
+In addition to the resources of the various widgets, the
+.B xletters
+application itself recognizes some resources.  These are:
+.TP
+.B "wordFont (\fRclass\fP Font, \fRtype\fP FontStruct)"
+The font in which the falling words are written.
+.TP
+.B "wordColor (\fRclass\fP Foreground, \fRtype\fP Pixel)"
+The color in which the (untyped part of the) falling words are written.
+.TP
+.B "typedColor (\fRclass\fP HighlightColor, \fRtype\fP Pixel)"
+The color in which the typed part of the falling words are written.
+.TP
+.B "deathMode (\fRclass\fP DeathMode, \fRtype\fP String)"
+Either \fInormal\fP, \fIdeath\fP or \fIduel\fP according as the
+game should be run in normal, deathmatch or duel mode (see
+.B "DEATHMATCH AND DUEL"
+above).
+.TP
+.B "trainingMode (\fRclass\fP TrainingMode, \fRtype\fP Boolean)"
+Whether the game should be run in training mode (this overrides
+any value of the
+.B deathMode
+resource (see
+.B "TRAINING MODE"
+above).
+.SH FILES
+.PP
+(If not overriden at compile time)
+.TP
+.B /usr/dict/words
+The dictionary of words.
+.TP
+.B /var/local/games/lib/xletters/scores
+The high score table.
+.SH "CONFIGURATION SUGGESTION"
+.PP
+xletters
+\-wfn '\-bitstream\-terminal\-medium\-r\-normal\-\-18\-*\-*\-*\-c\-*\-iso8859\-1'
+\-gbg 'MidnightBlue'
+\-wc 'PaleGoldenrod'
+\-tc 'Orchid'
+.SH BUGS
+.PP
+None known.  Surely a very temporary situation :-)
+.PP
+This is one of the ugliest programs I ever wrote.  I would not be surprized
+to discover plenty of bugs in it.  Version 1.0.0 was ugly enough.  Version
+1.1.0 gave a whole new meaning to the word ``uglyfication''.
+.SH SECURITY
+.PP
+.I xletters
+wants to access a high score table.  If this score table is to be shared
+between several users,
+.I xletters
+will probably be made sgid games or some such thing.  Beware that
+it is probably very easy to fool (or even brake to pieces).  I have
+no doubt that running it against a fake X server (and probably other
+similar things) can give not-too-hard access to whatever permissions
+it has been given.  Consequently, it should not be given any critical
+permissions.
+.SH AUTHORS
+.PP
+Peter Horvai (peter.horvai@ens.fr)
+wrote the deathmatch feature and implemented mmap()ing the dictionary
+file.
+.PP
+David Madore (david.madore@ens.fr)
+wrote version 1.0.0, all the X Windows parts of the game, and this
+man page.
+.SH COPYING
+GNU public license.  See the file
+.B COPYING
+for more information.
+.SH "SEE ALSO"
+.BR letters (6),
+.BR xtetris (6)

@@ -1,0 +1,33 @@
+2004-1-11  Extended inputconv.txt to be much more liberal (and corrected a 
+ 2.0.4     bug for katakana-dzu). Now hopefully accepts everything existing
+           input-methods accept (and more), e.g.  double consonnants for
+           small-tsu preceding a consonnant, etc. 
+           Added (still to inputconv.txt) a compositing table for western
+           european languages (incomplete).
+
+2004-1-6   Included jp-en.txt pre-processed to include markers and 
+ 2.0.3     meta-information (see CompJapanEngDict.java).
+           Attempt to merge with Felipe Bergo (bergo@seul.org)'s 1.1.1
+           branch: *adding automake/autoconf building,
+             (binary will be called "xletters2" until code becomes 
+             reasonably stable)
+                   *renaming config.h to xletters.h
+
+2003-7-21  Fixed big SEGFAULT bug in 2.1.  When running into 
+ 2.0.2     difficulties at establishing the kana2kanji correspondence,
+ (alias    xletters now prints the word-file line number where player need 
+ jp-2.2)   to help with markers.
+
+2003-7-21  major rewrite: handles kanji words; words may have several
+ 2.0.1     kana-transcriptions, plus possibly a translation/comment;
+ (alias    dictionary file is now UTF-8 Unicode; word lists for original
+ jp-2.1)   xletters (v<=1.10) are accepted; input-conversion rules are 
+           read at runtime, also UTF-8 format; ...
+
+2003-5-17  (version naming changed to avoid confusion with new 
+ 2.0.0     potential normal xletters versions)
+ (alias    merged romajikana.cnv and ascii_jis0208.txt
+ jp-2.0)   minor changes to ascii_jis0208 translation table
+
+2003-5-12  first xletters version patched for Japanese dictionnary
+ 1.1.0jp   starting point: original xletters version 1.1.0

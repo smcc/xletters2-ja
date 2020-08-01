@@ -1,0 +1,254 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN"
+                      "http://www.w3.org/TR/REC-html40/loose.dtd">
+<html>
+<head>
+  <title>xletters dictionary format</title>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+</head>
+
+<body>
+
+<h1>xletters dictionary format description</h1>
+
+<p>xletters can use any word list, in any language, provided it has
+the format described here. This format extends Jim Breen's EDICT
+format to include some more information to help xletters. In
+particular, EDICT-format dictionaries like the Japanese-English
+&quot;edict&quot; will work with xletters out of the box provided they
+are stored as UTF-8 Unicode. But note that even simple word lists (one
+word per line) satisfy the format. 
+
+<h2>a few examples</h2>
+
+<ul>
+<li> <em>plain word list:</em>
+<pre><code>
+  nice
+  mice
+  Don't_Panic_!
+  Mäuse
+  rêve
+  Спасибо
+  ...
+</code></pre>
+</li>
+<li> <em>dictionary:</em>
+<pre><code>
+  Mäuse /mice/
+  rêve /dream/
+  Спасибо /thank you/
+  ...
+</code></pre>
+</li>
+<li> <em>Unicode- or TeX-trainer ;-):</em>
+<pre><code>
+  ∫ [integral] [0x222B] [\int]
+  ⊙ [circled dot operator] [0x2299] [\bigodot]
+  ∀ [for all] [0x2200] [\forall]
+  ...
+</code></pre>
+</li>
+</ul>
+
+<h2>dictonary line format</h2>
+
+The lines of the dictionary have basically the form:
+<pre>
+KANJI [KANA] /TRANSLATION/ &lt;META-INFO&gt;
+</pre>
+Note that the symbols "[]", "//", "&lt;&gt;" are needed to identify their
+content as KANA, TRANSLATION and META-INFO respectively. </p>
+
+<p>One and exactly one KANJI field is mandatory. At least one [KANA]
+field is needed except if KANJI can be entered literally (see <a
+href="#ref2" name="deref2">*Pure kana word*</a> rule below). The other
+fields are optional.</p>
+
+<h2>file format</h2>
+
+<p>The file format is UTF-8 Unicode. The field separating spaces and the
+delimiters "[]", "//"
+and "&lt;&gt;" are the ASCII versions. Provided you compile xletters
+to use the appropriate font, any Unicode character is allowed in the
+dictionary (in any of the KANJI, KANA and TRANSLATION fields).</p>
+
+<p>To edit the dictionary file or write your own, you need an editor
+able to read and save UTF-8 encoded files (e.g. "GNU emacs", or
+"TextEdit" on Mac-OS 10). Otherwise please refer to recoding programs
+like "recode" or "iconv" (GNU programs, use Google) to convert to and
+from your editor's coding.</p>
+
+<h2>field descriptions</h2>
+
+<dl>
+<dt>KANJI</dt>
+<dd>is the word that will fall. It can be any mixture of Unicode
+characters that your computer can diplay.
+</dd>
+
+<dt>KANA</dt>
+<dd>is the text that the player will have to type to destroy the word. 
+For japanese words this will be a hiragana or katakana transcription
+of the KANJI word. KANA must contain only letters and symbols which 
+may be entered directly on the keyboard or whose
+keyboard equivalent is described in the inputconv.txt file. Note that
+the ASCII point (&quot;.&quot;) has a special meaning: The point
+&quot;.&quot; is used to tell xletters which kana correspond to a
+given kanji from KANJI (see <a href="#ref3" name="deref3">*Kana
+separation*</a> below); it is not printed and need not be typed.
+</dd>
+
+<dt>TRANSLATION</dt>
+<dd>is a comment on the word which can optionally be displayed next to
+the falling word. It has no special role in the game, apart from
+giving the player a clue and teach. Typically, it will be a
+translation in some other language. It is displayed with its own font (see config.h),
+so any characters contained in that font are possible here.
+</dd>
+
+<dt>META-INFO</dt>
+<dd>is used to characterize the word further.
+Currently, it contains the frequency-of-use ranking of the least used
+kanji (F&lt;num&gt;), and the maximum Jouyou grade level of the kanji in the
+word (G&lt;num&gt;). See Jim Breen's kanjidic documentation for information
+about these fields. Thanks to this META-INFO, the player can restrict the
+dictionary to certain levels.
+</dd>
+</dl>
+
+<h2>additional rules</h2>
+
+<dl>
+<dt><a href="#deref2" name="ref2"></a>Pure kana word (KANJI==KANA)</dt>
+<dd>
+  If KANJI contains only typable characters (i.e. you know how to enter them on the keyboard), then the whole
+  dictionary line may take the simple form<br>
+  KANA /TRANSLATION/ &lt;META-INFO&gt;<br>
+  effectively omitting the redundant field.<br>
+  For Japanese with the included input-conversion (file: <code>inputconv.txt</code>), this is the case when
+  KANJI contains only hiragana and katakana (i.e. the content of
+  KANA is identical to the one of KANJI).  <em>Example:</em><br>
+  けれども /(conj) but/however/<br>
+  For most languages other than Japanese, this format is sufficient. 
+  As an example, a russian dictionary could be made, with the KANA
+  field containing the word in Cyrillic; an adapted inputconv.txt file
+  would indicate how cyrillic letters are entered on a non-cyrillic
+  keyboard.
+</dd>
+
+<dt>More than one translation</dt>
+<dd>
+  TRANSLATION may contain more than one translation. Translations are
+  juxtaposed, separated by the "/" character. xletters then chooses
+  one of the translations randomly. <em>Example:</em><br>
+  あの人 [あのひと] /he/she/that person/
+</dd>
+
+<dt>More than one reading</dt>
+<dd>
+  There may be more than one KANA transcription for a given word. Two
+  cases have to be distinguished
+  <ol>
+  <li> Different readings have different translations. In this case,
+  use several lines:<br>
+  KANJI [KANA1] /TRANSLATION1/ &lt;META-INFO&gt;<br>
+  KANJI [KANA2] /TRANSLATION2/ &lt;META-INFO&gt;<br>
+  ...<br>
+  <em>Example:</em><br>
+  一月 [いちがつ] /(n-adv) January/<br>
+  一月 [ひとつき] /one month/<br></li>
+
+  <li>The translation is the same for the different readings. In this
+  case, the different readings may follow each other on the same line:<br>
+  KANJI [KANA1] [KANA2] ... /TRANSLATION/ &lt;META-INFO&gt;<br>
+  with as many kana transcriptions as needed. <em>Example:</em><br>
+  一言 [いちごん] [ひとこと] /(n) single word/</li>
+  </ol>
+  Note that the two may be mixed arbitrarily, as in:<br>
+  KANJI [KANA1] [KANA2] /TRANSLATION1/ &lt;META-INFO&gt;<br>
+  KANJI [KANA3] /TRANSLATION2/ &lt;META-INFO&gt;
+</dd>
+
+<h2><a href="#deref3" name="ref3"></a>Kana separation</h2>
+
+xletters prints the typed part of a word in a different color, to
+help the player monitor progress. Because there are many readings for
+each kanji, and xletters is oblivious of this, xletters needs
+help in determining when a kanji has been completed. Therefore, the
+KANA transcription contains ASCII points (".") to mark the end of
+kanji. For example, "一月" (January) is made up of two kanji which
+represent two kana each in the reading いちがつ, so that a point would
+be needed after "いち" and another after "がつ", resulting in the
+line:<br>
+一月 [いち.がつ] /(n-adv) January/<br>
+(the second point can be omitted because it is the end of the word)
+To avoid lengthy editing, some heuristics is built into xletters to
+decompose many cases without the need for point marks. If xletters is
+unsure about a decomposition, it will print a warning on standard
+error. Therefore, when you build your own dictionary, you can usually
+start playing with it without worrying about putting "." marks in the
+KANA transcriptions, and take care only of the cases where xletters
+complains and/or does a bad job. You can also have a look at the CompJapanEngDict utility, which uses a kanji dictionary to find possible decompositions (doing the job for you in about 95-98% of the cases).<p>
+
+xletters's heuristics works as follows:
+<ol>
+<li> try to match kana in the KANJI field to those in the KANA
+  field.</li>
+<li> if this isolates kanji individually, as it does in words
+  containing only one kanji and words with kanji surrounded/separated
+  by kana (e.g. 一つ一つ), the remaining kana in KANA can be
+  associated in a unique way to the kanji.</li>
+<li> for all other cases, a delimited block in the KANJI string is
+  drawn as typed all at once when the corresponding block of kana has
+  been typed. A warning is issued (<a href="#ref1"
+  name="deref1">*remark*</a>).</li>
+</ol>
+
+<p>
+<a href="#deref1" name="ref1">*remark*</a> For groups of kanji, if the
+number of kana is the same as the number of kanji, one would be
+tempted to attribute one kana to each kanji. I chose not to implement
+this because this method can be deceiving: it suggests that in お祖母
+さん, whose reading is おばあさん, 祖 corresponds to ば and 母 to あ,
+although these are not readings of the respective kanji.</li> For this
+specific case, I would rather suggest that 祖母 be associated <it>en
+bloc </it> to ばあ, i.e. write the kana transcription as &quot;おばあ.
+.さん&quot;. The effect of the two adjacent points is to complete both
+kanji at the same point when the word is typed. Of course, this is a
+matter of personal taste.</p>
+
+<em>Examples:</em>
+<ul>
+<li> 小売り店 [こうりてん] /retail store/retail shop/<br> step 1)
+        successfully matches the り in the KANJI string to the same
+        hiragana in the KANA sequence (because it is unique). This
+        isolated the last kanji 店, so that step 2) can associate the
+        transcription てん to it. However, the first two kanji form a
+        block, so a warning is issued. The behaviour in the game
+        corresponds to &quot;こう..りてん&quot;, where the correct
+        notation would be &quot;こ. う.りてん&quot; (one kana
+        attributed to each of the two first kanji).</li>
+<li> お願い致します [おねがいいたします] /(hon) please/<br>
+  The first and the last three hiragana are matched in step 1), but
+  there are two possibilities for matching the い. xletters prints
+  a warning and marks 願い致 as a block which is highlighted as a
+  whole when the player has typed everything up to た. Ugly. In
+  point-notation, the result is &quot;おねがいいた..します&quot; when
+  it should rather be &quot;おねが.いいた.します&quot;.
+</li>
+<li> 大雨 [おおあめ] /(n) heavy rain/<br>
+  Without further knowledge, xletters can't know whether the first
+  kanji corresponds to one, two or three kana. Therefore the player
+  must type all four kana before both kanji are simultaneously
+  highlighted and then erased (because the word is destroyed). Thus
+  there is no visual feedback on the typing progress here.</li>
+<li> play xletters and compare what you see to the content of the
+  dictionary...</li>
+</ul>
+
+For the sake of clarity, it should be stressed again that this
+decomposition issue can be safely ignored if one is happy with
+xletters's default behaviour. It's only about improving the visual
+feedback to the typing player.
+</body>
+</html>

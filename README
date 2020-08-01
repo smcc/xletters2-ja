@@ -1,0 +1,83 @@
+X Letters 2 (Unicode) - Catch falling words
+
+This version 2 is a major rewrite, so expect bugs and broken features
+(with respect to xletters versions 1.1.x). Some features described in
+the doc (e.g. the possibility to select dictionary entries according
+to difficulty levels) are not implemented yet. 
+Below you can find: 
+* install instructions
+* comments about new features and un-features
+
+----------------------------------------------------------
+* warnings for an installation alongside an old xletters (version <= 1.1.x)
+
+Beware that any previous version of xletters will share its application
+defaults with this one.
+
+----------------------------------------------------------
+* install instructions
+
+0. Read the GPL carefully if you don't know it by heart already.  You
+can find it in the file COPYING.  It applies to xletters.
+
+1. Edit the file xletters.h; you can leave everything untouched if you
+want.
+
+2. Build xletters by typing
+	./configure && make
+
+3. Become root and install xletters by typing
+	make install
+You may want to make xletters sgid games. Read the INSTALL
+file for further information.
+Except for the score file, everything will go into /usr/local by
+default. A directory /var/local/games/lib/xletters is created, with a 
+world-readable empty score file inside.
+
+				Paris, 2004/01/06
+				Adrian Daerr
+
+----------------------------------------------------------
+* comments about new features and un-features
+
+(see also Changelog)
+
+- Any UTF-8 encoded word list or dictionary may be used. See the file
+"dictionary.html" for information about the file format. Word-lists
+for xletters v<=1.1.x will continue to work. See the included
+Japanese-english dictionary "jp-en.txt" as an example of xletters new
+capabilities (distinction between drawn and typed characters, input
+conversion layer). If you create or find a word list or dictionary you
+would like to share, please drop a note.
+
+The included "jp-en.txt" is a processed version of the
+Japanese-English Electronic Dictionary File EDICT 25APR02 V02-001, and
+is copyright J.W. Breen - 2002).
+
+- The tranlation tables to convert keyboard input to typed characters
+(in the case of japanese: kana) are contained in the file
+"inputconv.txt". You can edit this file with any editor capable of
+reading and saving Unicode in UTF-8 format.
+
+- New options:
+  -showk n, which says if and how the kana transcription should be shown
+    next to the kanji. The value of the integer parameter n is
+    somewhere between 0 (don't show furigana transcription) and 31
+    (preselect transcription and show everything you can) and is
+    obtained by summing the numbers in front of the desired behaviour:
+     1 show typed part of furigana, in the lower part of the screen
+     2 show typed part of furigana, always
+     4 show untyped part of furigana, in the lower part of the screen
+     8 show untyped part of furigana, always
+    16 pick one furigana transcription at the beginning (i.e. 
+       to destroy word, only this transcription will work). This implies +8 
+       to avoid frustration.
+
+  -showc n, which says if and how the comment/translation should be shown:
+    n=0 don't show comment/translation
+    n=1 show comment/translation, in the lower part of the screen
+    n=2 show comment/translation, always
+
+- Don't try to put CONTEXT = 1 in xletters.h. It won't work.
+
+- The deathmatch and duel modes are broken. Sorry.

@@ -1,0 +1,20 @@
+AC_INIT(xletters.c)
+AM_INIT_AUTOMAKE(xletters,2.0.3)
+AM_CONFIG_HEADER(config.h)
+
+AC_PROG_CC
+AC_PROG_INSTALL
+AC_HEADER_STDC
+
+dnl headers
+AC_CHECK_HEADERS(time.h unistd.h errno.h fcntl.h pwd.h sys/mman.h sys/types.h,,AC_MSG_ERROR(required header files missing))
+
+dnl X
+AC_PATH_XTRA
+
+CFLAGS="$CFLAGS $X_CFLAGS"
+LIBS="$LIBS $X_PRE_LIBS $X_LIBS -lX11 -lXext -lXt -lXaw $X_EXTRA_LIBS"
+
+AC_OUTPUT(Makefile xletters.spec)
+
+

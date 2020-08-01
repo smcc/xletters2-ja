@@ -1,0 +1,2 @@
+#!/bin/sh
+nc -l -p 9090 | xletters -duel | (sleep 5; nc $1 9090)

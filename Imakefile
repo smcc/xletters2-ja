@@ -1,0 +1,42 @@
+/* X Letters - Catch falling words */
+/* Copyright (C) 1998 by David A. Madore (david.madore@ens.fr) */
+
+/*
+ * This program is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU General Public License
+ * as published by the Free Software Foundation; either version
+ * 2 of the License, or (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty
+ * of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See
+ * the GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
+ * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+ */
+
+# Process with xmkmf to produce the makefile
+
+# Set this to the user and group who should own xletters
+OWNER = games
+GROUP = games
+
+INSTALLFLAGS = -c -o $(OWNER) -g $(GROUP)
+
+# This will install xletters in /usr/local/bin
+# and man page in /usr/local/man/man6 with extension 6x
+DESTDIR = /usr/local
+BINDIR = /bin
+MANPATH = /man
+MANSOURCEPATH = $(MANPATH)/man
+MANDIR = $(MANSOURCEPATH)6
+MANSUFFIX = 6x
+
+LOCAL_LIBRARIES = XawClientLibs
+
+SimpleProgramTarget(xletters)
+
+install::
+	$(INSTALL) $(INSTALLFLAGS) xletters-duel $(DESTDIR)$(BINDIR)/xletters-duel
