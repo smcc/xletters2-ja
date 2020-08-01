@@ -28,10 +28,10 @@
  * resources, as that would be cheating. */
 
 /* The width of the play area, in pixels */
-#define WIDTH 1024
+#define WIDTH 1792
 
 /* The height of the play area, in pixels */
-#define HEIGHT 1024
+#define HEIGHT 1792
 
 
 
@@ -120,7 +120,7 @@
 #define KANATYPED_COLOR "Salmon"
 
 /* And one more set of prefs for the translation */
-#define COMMENTFONTNAME "-*-fixed-medium-r-normal-*-15-*-*-*-*-*-iso8859-1"
+#define COMMENTFONTNAME "-*-fixed-medium-r-normal-*-24-*-*-*-*-*-iso8859-1"
 #define COMMENT_COLOR "LimeGreen"
 
 #define KANJI_FREQ 0 /* limit to the ... most frequent kanji */
